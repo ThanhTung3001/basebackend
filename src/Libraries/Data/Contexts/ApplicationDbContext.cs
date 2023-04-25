@@ -124,17 +124,17 @@ namespace Data.Contexts
         {
             var entries = ChangeTracker.Entries<BaseEntity>().Where(e => (
                 e.State == EntityState.Added || e.State == EntityState.Modified));
-
+            // var username = HttpContext.User.Identity.Name;
             foreach (var entry in entries)
             {
                 if (entry.State == EntityState.Added)
                 {
                     ((BaseEntity)entry.Entity).CreateUTC = DateTime.UtcNow;
-                    ((BaseEntity)entry.Entity).CreateBy = "example_user"; // thay bằng tên người dùng thực tế
+                  //  ((BaseEntity)entry.Entity).CreateBy = "example_user"; // thay bằng tên người dùng thực tế
                 }else if (entry.State == EntityState.Modified)
                 {
                     ((BaseEntity)entry.Entity).UpdateTime = DateTime.UtcNow;
-                    ((BaseEntity)entry.Entity).UpdateBy = "example_user"; 
+                 //   ((BaseEntity)entry.Entity).UpdateBy = "example_user"; 
                 }
             }
         }

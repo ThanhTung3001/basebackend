@@ -46,11 +46,20 @@ namespace WebApi
             services.AddAutoMapper(typeof(MappingProfiles));
             services.AddCustomSwagger(Configuration);
             
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins",
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin()
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+            });
 
-            services.AddControllers();
-            //.AddNewtonsoftJson(options =>
-            //options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-            //);
+            services.AddControllers().AddNewtonsoftJson(options =>
+            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
 
             services.AddHealthChecks()
 
@@ -84,7 +93,7 @@ namespace WebApi
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseCors("AllowAllOrigins");
             //app.UseSerilogRequestLogging();
             loggerFactory.AddSerilog();
 
@@ -97,7 +106,7 @@ namespace WebApi
 
             //error middleware
             app.UseErrorHandlingMiddleware();
-
+       
             app.UseSwagger();
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Service Api V1"); });
 

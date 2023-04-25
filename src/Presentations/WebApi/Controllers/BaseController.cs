@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Data.Contexts;
 using Models.DbEntities;
+using Services.Interfaces;
 
 namespace WebApi.Controllers
 {
@@ -17,12 +19,15 @@ namespace WebApi.Controllers
         where TUpdateModel :BaseEntity
     {
         private readonly IMapper _mapper;
-        private readonly DbContext _dbContext;
+        private readonly ApplicationDbContext _dbContext;
+        private readonly IAuthenticatedUserService _userService;
+        
 
-        public BaseController(DbContext dbContext, IMapper mapper)
+        public BaseController(ApplicationDbContext dbContext, IMapper mapper, IAuthenticatedUserService userService)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _userService = userService;
         }
 
         [HttpGet]
@@ -49,6 +54,7 @@ namespace WebApi.Controllers
         public virtual async Task<ActionResult<TModelDto>> Create(TCreateModel createModel)
         {
             var model = _mapper.Map<TModel>(createModel);
+            model.CreateBy = _userService.UserName;
             _dbContext.Set<TModel>().Add(model);
             await _dbContext.SaveChangesAsync();
             var modelDTO = _mapper.Map<TModelDto>(model);
@@ -68,7 +74,7 @@ namespace WebApi.Controllers
             {
                 return NotFound();
             }
-
+            model.CreateBy = _userService.UserName;
             _mapper.Map(updateModel, model);
 
             _dbContext.Entry(model).State = EntityState.Modified;

@@ -49,12 +49,18 @@ namespace Identity.Services.Concrete
             ApplicationUser user = await _userManager.FindByEmailAsync(request.Email.Trim());
             if (user == null)
             {
-                throw new ApiException($"You are not registered with '{request.Email}'.") { StatusCode = (int)HttpStatusCode.BadRequest };
+                user = await _userManager.FindByNameAsync(request.Email.Trim());
+                if (user == null)
+                {
+                    throw new ApiException($"You are not registered with '{request.Email}'.") { StatusCode = (int)HttpStatusCode.BadRequest };
+                }
+              
+                
             }
-            if (!user.EmailConfirmed)
-            {
-                throw new ApiException($"Account Not Confirmed for '{request.Email}'.") { StatusCode = (int)HttpStatusCode.BadRequest };
-            }
+            // if (!user.EmailConfirmed)
+            // {
+            //     throw new ApiException($"Account Not Confirmed for '{request.Email}'.") { StatusCode = (int)HttpStatusCode.BadRequest };
+            // }
 
             SignInResult signInResult = await _signInManager.PasswordSignInAsync(user, request.Password, false, lockoutOnFailure: false);
             if (!signInResult.Succeeded)
@@ -278,7 +284,7 @@ namespace Identity.Services.Concrete
 
             await _emailService.SendAsync(new EmailRequest()
             {
-                From = "sinantok@outlook.com",
+                From = "tungle3001.itfreelancer@gmail.com",
                 To = newUser.Email,
                 Body = $"Please confirm your account by visiting this URL {verificationUri}",
                 Subject = "Confirm Registration"

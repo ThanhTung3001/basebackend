@@ -3,5 +3,6 @@
     public interface IAuthenticatedUserService
     {
         string UserEmail { get; }
+        string UserName { get; }
     }
 }

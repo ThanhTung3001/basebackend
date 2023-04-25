@@ -19,6 +19,7 @@ namespace WebApi.Controllers
     {
         private readonly IAccountService _accountService;
         private readonly IMapper _mapper;
+
         public AdminController(IAccountService accountService, IMapper mapper)
         {
             _accountService = accountService;

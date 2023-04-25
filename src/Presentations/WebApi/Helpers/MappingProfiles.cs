@@ -3,6 +3,7 @@ using Data.Mongo.Collections;
 using Identity.Models;
 using Models.DTOs.Account;
 using Models.DTOs.Log;
+using Models.DTOs.Menu;
 
 namespace WebApi.Helpers
 {
@@ -19,6 +20,11 @@ namespace WebApi.Helpers
             CreateMap<LoginLog, LogDto>()
                .ForMember(d => d.UserEmail, o => o.MapFrom(s => s.UserEmail))
                .ForMember(d => d.LoginTime, o => o.MapFrom(s => s.LoginTime));
+
+            CreateMap<ApplicationMenu, MenuDto>();
+            CreateMap<MenuDtoCreate, ApplicationMenu>();
+            CreateMap<MenuDtoUpdate, ApplicationMenu>();
+            // .ForMember(d=>d.MenuRoles)
         }
     }
 }

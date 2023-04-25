@@ -30,11 +30,11 @@ namespace WebApi.Controllers
             if (result.Errors == null || !result.Errors.Any())
             {
                 //mongo usage example
-                LoginLog log = new LoginLog()
-                {
-                    LoginTime = DateTime.Now,
-                    UserEmail = request.Email
-                };
+                // LoginLog log = new LoginLog()
+                // {
+                //     LoginTime = DateTime.Now,
+                //     UserEmail = request.Email
+                // };
                 // await _loginLogService.Add(log);
             }
             return Ok(result);
