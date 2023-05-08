@@ -34,6 +34,7 @@ public class AttachmentController : ControllerBase
         }
 
         var fileName = Path.GetFileName(file.FileName);
+        var fileFullPath = Path.Combine(savePath, fileName);
         var filePath = Path.Combine(savePath, fileName);
         var _savePath = Path.Combine(Directory.GetCurrentDirectory(), savePath);
         if (!Directory.Exists(_savePath))
@@ -50,14 +51,14 @@ public class AttachmentController : ControllerBase
             FileName = fileName,
             ContentType = file.ContentType,
             Size = file.Length,
-            FilePath = filePath,
+            FilePath = fileFullPath,
             CreatedAt = DateTime.Now
         };
 
         _dbContext.Attachments.Add(attachment);
         await _dbContext.SaveChangesAsync();
 
-        return Ok(new { attachment.Id, attachment.FileName,PathFile=filePath });
+        return Ok(new { attachment.Id, attachment.FileName, PathFile = filePath });
     }
 
     [HttpPost("multiple")]

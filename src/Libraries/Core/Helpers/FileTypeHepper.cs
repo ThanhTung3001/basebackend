@@ -7,7 +7,7 @@ namespace Core.Helpers;
 public class FileTypeHepper
 {
 
- public static bool IsImage(IFormFile file)
+    public static bool IsImage(IFormFile file)
     {
         var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
         var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
@@ -28,3 +28,5 @@ public class FileTypeHepper
         return ((IList)allowedExtensions).Contains(extension);
     }
 }
+
+//

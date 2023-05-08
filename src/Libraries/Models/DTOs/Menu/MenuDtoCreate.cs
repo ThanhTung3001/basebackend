@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using Models.DbEntities;
-
 namespace Models.DTOs.Menu
 {
     public class MenuDtoCreate
@@ -12,5 +8,18 @@ namespace Models.DTOs.Menu
         public bool IsActive { get; set; } = true;
         public int? ParrentId { get; set; }
 
+
+
+    }
+
+    public class MenuRoleDto
+    {
+        public int MenuId { get; set; }
+
+        //   public ApplicationMenu Menu { get; set; }
+
+        public int RoleId { get; set; }
+
+        //    public ApplicationRole Role { get; set; }
     }
 }

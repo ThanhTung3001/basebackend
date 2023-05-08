@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 using Data.Contexts;
 using Models.DbEntities;
 using Services.Interfaces;
+using Models.DTOs;
+using Models.Paging;
+using System;
 
 namespace WebApi.Controllers
 {
@@ -14,14 +17,14 @@ namespace WebApi.Controllers
     [ApiController]
     public class BaseController<TModel, TModelDto, TCreateModel, TUpdateModel> : ControllerBase
         where TModel : BaseEntity
-        where TModelDto : BaseEntity
-        where TCreateModel : BaseEntity
-        where TUpdateModel :BaseEntity
+        where TModelDto : BaseDto
+        where TCreateModel : class
+        where TUpdateModel : BaseDto
     {
-        private readonly IMapper _mapper;
-        private readonly ApplicationDbContext _dbContext;
+        public readonly IMapper _mapper;
+        public readonly ApplicationDbContext _dbContext;
         private readonly IAuthenticatedUserService _userService;
-        
+
 
         public BaseController(ApplicationDbContext dbContext, IMapper mapper, IAuthenticatedUserService userService)
         {
@@ -31,11 +34,23 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult<IEnumerable<TModelDto>>> GetAll()
+        public virtual async Task<ActionResult<IEnumerable<TModelDto>>> GetAll([FromQuery] PaginationDto request)
         {
-            var models = await _dbContext.Set<TModel>().ToListAsync();
+            var models = await _dbContext.Set<TModel>().Skip((request.PageNumber - 1) * request.PageSize) // Skip the number of items on previous pages
+                .Take(request.PageSize) // Take the number of items for the current page
+                .ToListAsync();
             var modelDTOs = _mapper.Map<IEnumerable<TModelDto>>(models);
-            return Ok(modelDTOs);
+            var totalItems = _dbContext.Set<TModel>().Count();
+            var totalPages = (int)Math.Ceiling((double)totalItems / request.PageSize);
+            var response = new PaginationReponseDto<IEnumerable<TModelDto>>()
+            {
+                TotalItem = totalItems,
+                TotalPage = totalPages,
+                PageNumber = request.PageNumber,
+                PageSize = request.PageSize,
+                Data = modelDTOs
+            };
+            return Ok(response);
         }
 
         [HttpGet("{id}")]

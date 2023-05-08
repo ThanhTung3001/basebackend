@@ -13,7 +13,8 @@ namespace Identity.Contexts
         public IdentityContext(DbContextOptions<IdentityContext> options) : base(options)
         {
         }
-        public  DbSet<ApplicationMenu> ApplicationMenus { get; set; }
+        public DbSet<ApplicationMenu> ApplicationMenus { get; set; }
+        public DbSet<ApplicationMenuRole> ApplicationMenuRole { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<ApplicationMenuRole>().HasKey(sc => new { sc.MenuId, sc.RoleId });
@@ -24,7 +25,7 @@ namespace Identity.Contexts
             {
                 entity.ToTable(name: "User");
             });
-            
+
             builder.Entity<ApplicationRole>(entity =>
             {
                 entity.ToTable(name: "Role");
@@ -41,7 +42,7 @@ namespace Identity.Contexts
                     .HasForeignKey(e => e.MenuId);
                 entity.HasMany(x => x.Children)
                     .WithOne(x => x.Parent)
-                    .HasForeignKey(x=>x.ParrentId)
+                    .HasForeignKey(x => x.ParrentId)
                     .OnDelete(DeleteBehavior.Restrict);
             });
 
@@ -59,8 +60,8 @@ namespace Identity.Contexts
                     .HasForeignKey(ur => ur.UserId)
                     .IsRequired();
                 entity.ToTable("UserRoles");
-                
-               
+
+
             });
 
             builder.Entity<ApplicationUserClaim>(entity =>

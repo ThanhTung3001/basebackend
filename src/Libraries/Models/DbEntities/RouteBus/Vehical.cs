@@ -3,9 +3,8 @@ using System.Collections.Generic;
 
 namespace Models.DbEntities.RouteBus;
 
-public class Vehicle:BaseEntity
+public class Vehicle : BaseEntity
 {
- 
     public string Model { get; set; }
     public string PlateNumber { get; set; }
     public int Capacity { get; set; }
@@ -24,7 +23,9 @@ public class Vehicle:BaseEntity
     public string FuelType { get; set; }
     public string TransmissionType { get; set; }
     public string BodyType { get; set; }
-    public string  Avatar { get; set; }
+    public string Avatar { get; set; }
+    public bool IsActive { get; set; }
+    public DateTime DateOfCirculation { get; set; }
+    public int NumberOfSeats { get; set; }
 
 }
-    

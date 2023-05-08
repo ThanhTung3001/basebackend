@@ -4,6 +4,7 @@ using Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace WebApi.Migrations.ApplicationDb
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230427081621_orgranization_update_email")]
+    partial class orgranization_update_email
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -119,11 +121,8 @@ namespace WebApi.Migrations.ApplicationDb
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Introduction")
+                    b.Property<string>("IsActive")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -438,9 +437,6 @@ namespace WebApi.Migrations.ApplicationDb
                     b.Property<DateTime>("CreateUTC")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("DateOfCirculation")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("EngineNumber")
                         .HasColumnType("nvarchar(max)");
 
@@ -453,17 +449,11 @@ namespace WebApi.Migrations.ApplicationDb
                     b.Property<string>("InsurancePolicyNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime>("LastMaintenanceDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Model")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("NumberOfSeats")
-                        .HasColumnType("int");
 
                     b.Property<int>("OrganizationId")
                         .HasColumnType("int");

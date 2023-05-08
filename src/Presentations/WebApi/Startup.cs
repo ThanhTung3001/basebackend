@@ -1,3 +1,4 @@
+using System.IO;
 using Caching;
 using Core;
 using Data.Mongo;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -45,7 +47,7 @@ namespace WebApi
             services.AddScoped<IAuthenticatedUserService, AuthenticatedUserService>();
             services.AddAutoMapper(typeof(MappingProfiles));
             services.AddCustomSwagger(Configuration);
-            
+
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAllOrigins",
@@ -106,10 +108,14 @@ namespace WebApi
 
             //error middleware
             app.UseErrorHandlingMiddleware();
-       
+
             app.UseSwagger();
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Service Api V1"); });
-
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+             Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"))
+            });
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

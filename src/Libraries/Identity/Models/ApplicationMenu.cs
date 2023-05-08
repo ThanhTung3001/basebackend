@@ -1,12 +1,11 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Identity.Common.Enum;
 using Models.DbEntities;
 
 namespace Identity.Models;
 
-public class ApplicationMenu:BaseEntity
+public class ApplicationMenu : BaseEntity
 {
     public DateTime ModifierDate { get; set; }
     public ICollection<ApplicationMenuRole> MenuRoles { get; set; } = new List<ApplicationMenuRole>();

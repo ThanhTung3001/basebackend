@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models.DTOs.Menu;
 using Models.DTOs.Response;
+using Models.Enums;
 using Services.Interfaces;
 
 namespace WebApi.Controllers
@@ -43,6 +44,7 @@ namespace WebApi.Controllers
             //    return BadRequest();
             // }
             var user = await _userManager.FindByNameAsync(_userService.UserName);
+
             var roles = await _userManager.GetRolesAsync(user);
             // var roles = user.UserRoles.Select(e => e.Role.Name).ToList(); 
 
@@ -54,7 +56,7 @@ namespace WebApi.Controllers
                 .ToList();
             var response = menuList.GroupBy(e => e.Id).ToList();
 
-            var ListMenu = new List<ApplicationMenu>();
+            var listMenu = new List<ApplicationMenu>();
             foreach (var group in response)
             {
                 var menu = new ApplicationMenu
@@ -72,9 +74,9 @@ namespace WebApi.Controllers
                         // add any other properties you want to map
                     }).ToList()
                 };
-                ListMenu.Add(menu);
+                listMenu.Add(menu);
             }
-            return Ok(ServiceResult.Success<object>(ListMenu));
+            return Ok(ServiceResult.Success<object>(listMenu));
 
         }
         /// <summary>
@@ -89,8 +91,16 @@ namespace WebApi.Controllers
             try
             {
                 var entity = _mapper.Map<ApplicationMenu>(create);
+                var role = await _roleManager.FindByNameAsync(Roles.SuperAdmin.ToString());
+                // entity.MenuRoles.Add(role);
                 entity.CreateUTC = DateTime.Now;
                 var response = await _context.ApplicationMenus.AddAsync(entity);
+                var menuRole = new ApplicationMenuRole()
+                {
+                    Role = role,
+                    Menu = entity
+                };
+                var resposeInsertRole = await _context.ApplicationMenuRole.AddAsync(menuRole);
                 await _context.SaveChangesAsync();
                 return Ok(ServiceResult.Success<MenuDto>(_mapper.Map<MenuDto>(response.Entity)));
             }
@@ -110,13 +120,12 @@ namespace WebApi.Controllers
             try
             {
 
-
-                var entity = _mapper.Map<ApplicationMenu>(update);
+                //var entity = _mapper.Map<ApplicationMenu>(update);
+                var entityFind = await _context.ApplicationMenus.FindAsync(id);
+                var entity = _mapper.Map(update, entityFind);
                 entity.Id = id;
                 entity.UpdateTime = DateTime.Now;
-
                 var response = _context.ApplicationMenus.Update(entity);
-
                 await _context.SaveChangesAsync();
                 return Ok(ServiceResult.Success<MenuDto>(_mapper.Map<MenuDto>(response.Entity)));
             }
@@ -137,8 +146,8 @@ namespace WebApi.Controllers
             {
 
                 var item = _context.ApplicationMenus.FirstOrDefault(e => e.Id == menuId);
-                var parrent = _context.ApplicationMenus.FirstOrDefault(e => e.Id == parrentId);
-                if (parrent.Parent != null)
+                var parent = _context.ApplicationMenus.Include(e => e.Parent).FirstOrDefault(e => e.Id == parrentId);
+                if (parent is { Parent: { } })
                 {
                     return BadRequest(ServiceResult.Failed<object>(new
                     {
@@ -194,6 +203,52 @@ namespace WebApi.Controllers
                     code = 400
                 }, ServiceError.DefaultError));
             }
+        }
+
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetAll()
+        {
+            // var role =  _roleManager.Roles.FirstOrDefault(e => roleName.ToUpper().Equals(e.Name.ToUpper()));
+            // if (role == null)
+            // {
+            //    // return ServiceResult.Failed<object>(ServiceError.NotFound);
+            //    return BadRequest();
+            // }
+            var user = await _userManager.FindByNameAsync(_userService.UserName);
+            var roles = await _userManager.GetRolesAsync(user);
+            // var roles = user.UserRoles.Select(e => e.Role.Name).ToList(); 
+
+            var menuList = _context.ApplicationMenus
+                .Include(m => m.Children)
+                .ThenInclude(cm => cm.Children)
+                .Include(m => m.Parent)
+                .ThenInclude(m => m.Parent)
+                .Include(m => m.MenuRoles)
+                .ToList();
+            var response = menuList.GroupBy(e => e.Id).ToList();
+
+            var listMenu = new List<ApplicationMenu>();
+            foreach (var group in response)
+            {
+                var menu = new ApplicationMenu
+                {
+                    Id = group.Key,
+                    Name = group.First().Name,
+                    Icon = group.First().Icon,
+                    Path = group.First().Path,
+                    Children = group.SelectMany(e => e.Children).Select(child => new ApplicationMenu
+                    {
+                        Id = child.Id,
+                        Name = child.Name,
+                        Icon = child.Icon,
+                        Path = child.Path
+                        // add any other properties you want to map
+                    }).ToList()
+                };
+                listMenu.Add(menu);
+            }
+            return Ok(ServiceResult.Success<object>(listMenu));
+
         }
     }
 }
