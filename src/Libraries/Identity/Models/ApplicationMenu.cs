@@ -7,6 +7,7 @@ namespace Identity.Models;
 
 public class ApplicationMenu : BaseEntity
 {
+    public int Index { get; set; }
     public DateTime ModifierDate { get; set; }
     public ICollection<ApplicationMenuRole> MenuRoles { get; set; } = new List<ApplicationMenuRole>();
     public string Path { get; set; }

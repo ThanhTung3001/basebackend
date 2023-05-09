@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Models.DbEntities;
 using Models.DbEntities.Attachments;
 using Models.DbEntities.RouteBus;
+using Models.DbEntities.Customer;
 
 namespace Data.Contexts
 {
@@ -24,8 +25,9 @@ namespace Data.Contexts
         public DbSet<Organization> Organizations { get; set; }
         public DbSet<OrganizationUser> OrganizationUsers { get; set; }
         public DbSet<Attachment> Attachments { get; set; }
+        public DbSet<CustomerType> CustomerTypes { get; set; }
 
-        
+
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -34,7 +36,7 @@ namespace Data.Contexts
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             RegisterEntityMapping(modelBuilder);
-            
+
             modelBuilder.Entity<Route>()
                 .HasMany(r => r.RouteStops)
                 .WithOne(rs => rs.Route)
@@ -84,7 +86,7 @@ namespace Data.Contexts
                 .WithOne(ou => ou.Organization)
                 .HasForeignKey(ou => ou.OrganizationId);
 
-      
+
             modelBuilder.Entity<Organization>()
                 .HasMany(o => o.Vehicles)
                 .WithOne(v => v.Organization)
@@ -130,11 +132,12 @@ namespace Data.Contexts
                 if (entry.State == EntityState.Added)
                 {
                     ((BaseEntity)entry.Entity).CreateUTC = DateTime.UtcNow;
-                  //  ((BaseEntity)entry.Entity).CreateBy = "example_user"; // thay bằng tên người dùng thực tế
-                }else if (entry.State == EntityState.Modified)
+                    //  ((BaseEntity)entry.Entity).CreateBy = "example_user"; // thay bằng tên người dùng thực tế
+                }
+                else if (entry.State == EntityState.Modified)
                 {
                     ((BaseEntity)entry.Entity).UpdateTime = DateTime.UtcNow;
-                 //   ((BaseEntity)entry.Entity).UpdateBy = "example_user"; 
+                    //   ((BaseEntity)entry.Entity).UpdateBy = "example_user"; 
                 }
             }
         }

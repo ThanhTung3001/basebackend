@@ -58,6 +58,10 @@ namespace WebApi
                             .AllowAnyMethod();
                     });
             });
+            services.AddSpaStaticFiles(config =>
+           {
+               config.RootPath = "Client/dist";
+           });
 
             services.AddControllers().AddNewtonsoftJson(options =>
             options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
@@ -116,6 +120,15 @@ namespace WebApi
                 FileProvider = new PhysicalFileProvider(
              Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"))
             });
+            app.UseSpa(spa =>
+           {
+               spa.Options.SourcePath = "Client/dist";
+
+               //if (env.IsDevelopment())
+               //{
+               //    spa.UseReactDevelopmentServer(npmScript: "start");
+               //}
+           });
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

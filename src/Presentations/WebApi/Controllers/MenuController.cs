@@ -51,6 +51,7 @@ namespace WebApi.Controllers
             var menuList = _context.ApplicationMenus
                 .Include(m => m.Children)
                 .ThenInclude(cm => cm.Children)
+               .OrderByDescending((e => e.Index))
                 .Where(e => e.Parent == null)
                 .Where(e => (e.MenuRoles.Any(menu => roles.Contains(menu.Role.Name))))
                 .ToList();

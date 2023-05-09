@@ -43,6 +43,9 @@ namespace WebApi.Migrations
                     b.Property<int>("IconType")
                         .HasColumnType("int");
 
+                    b.Property<int>("Index")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 

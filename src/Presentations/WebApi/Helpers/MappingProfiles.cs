@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Data.Mongo.Collections;
 using Identity.Models;
+using Models.DbEntities.Customer;
 using Models.DbEntities.RouteBus;
 using Models.DTOs.Account;
+using Models.DTOs.Customer;
 using Models.DTOs.Log;
 using Models.DTOs.Menu;
 using Models.DTOs.Organization;
@@ -38,6 +40,14 @@ namespace WebApi.Helpers
             CreateMap<VehicalDto, Vehicle>();
             CreateMap<VehicalUpdateDto, Vehicle>();
             CreateMap<VehicalCreateDto, Vehicle>();
+
+            //CustomerType
+            //CustomerType, CustomerDto, CustomerDtoCreate, CustomerDtoUpdate
+
+            CreateMap<CustomerType, CustomerDto>();
+            CreateMap<CustomerDto, CustomerType>();
+            CreateMap<CustomerDtoUpdate, CustomerType>();
+            CreateMap<CustomerDtoCreate, CustomerType>();
         }
     }
 }

@@ -32,11 +32,12 @@ public class AttachmentController : ControllerBase
         {
             return BadRequest("File not found");
         }
-
+        var pathSave = $"wwwroot/{savePath}";
         var fileName = Path.GetFileName(file.FileName);
-        var fileFullPath = Path.Combine(savePath, fileName);
-        var filePath = Path.Combine(savePath, fileName);
-        var _savePath = Path.Combine(Directory.GetCurrentDirectory(), savePath);
+        var fullPath = Path.Combine(savePath, fileName);
+
+        var filePath = Path.Combine(pathSave, fileName);
+        var _savePath = Path.Combine(Directory.GetCurrentDirectory(), pathSave);
         if (!Directory.Exists(_savePath))
         {
             Directory.CreateDirectory(_savePath);
@@ -51,14 +52,14 @@ public class AttachmentController : ControllerBase
             FileName = fileName,
             ContentType = file.ContentType,
             Size = file.Length,
-            FilePath = fileFullPath,
+            FilePath = fullPath,
             CreatedAt = DateTime.Now
         };
 
         _dbContext.Attachments.Add(attachment);
         await _dbContext.SaveChangesAsync();
 
-        return Ok(new { attachment.Id, attachment.FileName, PathFile = filePath });
+        return Ok(new { attachment.Id, attachment.FileName, PathFile = fullPath });
     }
 
     [HttpPost("multiple")]
