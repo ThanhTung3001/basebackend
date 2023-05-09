@@ -16,15 +16,14 @@ public class RouteStop
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 }
-public class Stop:BaseEntity
+public class Stop : BaseEntity
 {
- 
     public string Name { get; set; }
     public string Description { get; set; }
     public double Latitude { get; set; }
     public double Longitude { get; set; }
     public List<RouteStop> RouteStops { get; set; }
- 
+
 }
 
 
