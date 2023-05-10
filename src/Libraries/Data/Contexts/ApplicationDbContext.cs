@@ -9,6 +9,7 @@ using Models.DbEntities;
 using Models.DbEntities.Attachments;
 using Models.DbEntities.RouteBus;
 using Models.DbEntities.Customer;
+using Models.DbEntities.Notification;
 
 namespace Data.Contexts
 {
@@ -26,6 +27,8 @@ namespace Data.Contexts
         public DbSet<OrganizationUser> OrganizationUsers { get; set; }
         public DbSet<Attachment> Attachments { get; set; }
         public DbSet<CustomerType> CustomerTypes { get; set; }
+
+        public DbSet<Notification> Notifications { get; set; }
 
 
 
