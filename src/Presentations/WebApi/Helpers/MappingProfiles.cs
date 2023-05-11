@@ -8,6 +8,7 @@ using Models.DTOs.Customer;
 using Models.DTOs.Log;
 using Models.DTOs.Menu;
 using Models.DTOs.Organization;
+using Models.DTOs.Station;
 
 namespace WebApi.Helpers
 {
@@ -48,6 +49,14 @@ namespace WebApi.Helpers
             CreateMap<CustomerDto, CustomerType>();
             CreateMap<CustomerDtoUpdate, CustomerType>();
             CreateMap<CustomerDtoCreate, CustomerType>();
+
+            //CustomerType
+            //CustomerType, CustomerDto, CustomerDtoCreate, CustomerDtoUpdate
+
+            CreateMap<Station, StationDto>();
+            CreateMap<StationDto, Station>();
+            CreateMap<StationDtoUpdate, Station>();
+            CreateMap<StationDtoCreate, Station>();
         }
     }
 }

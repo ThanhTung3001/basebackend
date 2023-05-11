@@ -26,6 +26,12 @@ public class Route : BaseEntity
 
     public string TimeSlot { get; set; }
 
+    public bool IsActive { get; set; }
+
+    public int NumberOfLike { get; set; }
+
+    public int TripOfNumber { get; set; }
+
 
 }
 public class RouteSchedule : BaseEntity
